@@ -1,10 +1,7 @@
 import { MediMateClient } from '@/components/medimate-client';
+import { fetchSuggestedActions } from '@/app/actions';
 
 export default async function Home() {
-  const initialSuggestions = [
-      'Compare health plans',
-      'Find a doctor in my network',
-      'Check my claim status'
-  ];
+  const initialSuggestions = (await fetchSuggestedActions({ previousInteractions: [] })).actions;
   return <MediMateClient initialSuggestions={initialSuggestions} />;
 }
