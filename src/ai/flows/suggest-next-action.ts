@@ -34,7 +34,7 @@ const prompt = ai.definePrompt({
   name: 'suggestNextActionPrompt',
   input: {schema: SuggestNextActionInputSchema},
   output: {schema: SuggestNextActionOutputSchema},
-  model: 'gemini-2.0-flash',
+  model: 'googleai/gemini-2.0-flash',
   prompt: `You are an AI assistant helping users navigate their health insurance plans. Based on the conversation history and the user's insurance plan details, suggest the single most relevant next action for the user to take.
 
 Conversation History: {{{conversationHistory}}}

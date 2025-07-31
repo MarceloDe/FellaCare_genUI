@@ -1,7 +1,10 @@
 import { MediMateClient } from '@/components/medimate-client';
-import { getSuggestedActions } from '@/ai/flows/suggested-actions';
 
 export default async function Home() {
-  const initialSuggestions = await getSuggestedActions({ previousInteractions: [] });
-  return <MediMateClient initialSuggestions={initialSuggestions.actions} />;
+  const initialSuggestions = [
+      'Compare health plans',
+      'Find a doctor in my network',
+      'Check my claim status'
+  ];
+  return <MediMateClient initialSuggestions={initialSuggestions} />;
 }

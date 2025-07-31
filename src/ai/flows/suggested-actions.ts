@@ -31,7 +31,7 @@ const prompt = ai.definePrompt({
   name: 'suggestedActionsPrompt',
   input: {schema: SuggestedActionsInputSchema},
   output: {schema: SuggestedActionsOutputSchema},
-  model: 'gemini-2.0-flash',
+  model: 'googleai/gemini-2.0-flash',
   prompt: `You are a helpful AI assistant designed to guide users in using a health insurance application. Based on the user's previous interactions, suggest the next best action for them to take.  Here are some previous interactions: {{{previousInteractions}}}
 
 Suggest 3 next actions the user can take. Return the actions as a JSON array of strings.  Do not return any text other than the array.`,
