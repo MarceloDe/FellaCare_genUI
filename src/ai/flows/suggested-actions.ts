@@ -5,7 +5,7 @@
  *
  * - getSuggestedActions - A function that returns a list of suggested actions.
  * - SuggestedActionsInput - The input type for the getSuggestedActions function.
- * - SuggestedActionsOutput - The return type for the getSuggestedActions function.
+ * - SuggestedActionsOutput - The return type for the getSuggestedactions function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -34,7 +34,6 @@ const prompt = ai.definePrompt({
   prompt: `You are a helpful AI assistant designed to guide users in using a health insurance application. Based on the user's previous interactions, suggest the next best action for them to take.  Here are some previous interactions: {{{previousInteractions}}}
 
 Suggest 3 next actions the user can take. Return the actions as a JSON array of strings.  Do not return any text other than the array.`,
-  //   prompt: `Based on these previous interactions: {{{previousInteractions}}}, suggest three next actions, formatted as a JSON array.
 });
 
 const suggestedActionsFlow = ai.defineFlow(
