@@ -37,7 +37,7 @@ const renderDynamicUIPrompt = ai.definePrompt({
   name: 'renderDynamicUIPrompt',
   input: {schema: RenderDynamicUIInputSchema},
   output: {schema: RenderDynamicUIOutputSchema},
-  model: 'googleai/gemini-2.0-flash',
+  model: 'googleai/gemini-1.5-pro-latest',
   prompt: `You are an AI assistant specialized in rendering dynamic UI elements for a health insurance application.
 
   Based on the user prompt, generate an array of UI elements including text, buttons, text areas, and select elements with options to facilitate user interaction. Make the UI elements clickable when appropriate.  Consider the color for each UI element.
