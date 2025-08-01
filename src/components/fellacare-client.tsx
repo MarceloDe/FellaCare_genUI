@@ -2,19 +2,69 @@
 
 import { useState, useRef, useEffect, useTransition } from 'react';
 import type { RenderDynamicUIOutput } from '@/ai/flows/render-dynamic-ui';
-import { handleUserPrompt } from '@/app/actions';
+import { handleUserPrompt, fetchSuggestedActions } from '@/app/actions';
 import { Header } from '@/components/header';
 import { ChatInput } from '@/components/chat-input';
 import { SuggestedPrompts } from '@/components/suggested-prompts';
 import { GenerativeUIRenderer } from '@/components/generative-ui-renderer';
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from 'lucide-react';
+import { BottomNavigator } from './bottom-navigator';
+import { SocialFeed } from './social-feed';
+import { cn } from '@/lib/utils';
 
-export function FellaCareClient({ initialSuggestions }: { initialSuggestions: string[] }) {
+export function FellaCareClient() {
   const [uiElements, setUiElements] = useState<RenderDynamicUIOutput['uiElements']>([]);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const bottomOfPanelRef = useRef<HTMLDivElement>(null);
+  const [initialSuggestions, setInitialSuggestions] = useState<string[]>([]);
+  
+  const [activeTab, setActiveTab] = useState('Home');
+  const mainContentRef = useRef<HTMLDivElement>(null);
+  const [showSocialOverlay, setShowSocialOverlay] = useState(false);
+
+  useEffect(() => {
+    async function getSuggestions() {
+      if (initialSuggestions.length === 0) {
+        try {
+          const { actions } = await fetchSuggestedActions({ previousInteractions: [] });
+          setInitialSuggestions(actions);
+        } catch (error) {
+          console.error("Failed to fetch initial suggestions", error);
+        }
+      }
+    }
+    getSuggestions();
+  }, [initialSuggestions]);
+
+  const handleScroll = () => {
+    if (activeTab !== 'Home' || !mainContentRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = mainContentRef.current;
+    // Show overlay if user scrolls past a certain point
+    if (scrollTop > 100) {
+      setShowSocialOverlay(true);
+    } else {
+      setShowSocialOverlay(false);
+    }
+  };
+
+  useEffect(() => {
+    const mainEl = mainContentRef.current;
+    if (mainEl && activeTab === 'Home') {
+      mainEl.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      if (mainEl) {
+        mainEl.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [activeTab]);
+  
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setShowSocialOverlay(false); // Reset overlay when changing tabs
+  };
 
   const handleSubmit = (prompt: string) => {
     if(!prompt) return;
@@ -41,37 +91,66 @@ export function FellaCareClient({ initialSuggestions }: { initialSuggestions: st
     }
   }, [uiElements]);
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'Home':
+        return (
+          <>
+            <div className={cn("transition-opacity duration-500", showSocialOverlay ? 'opacity-0' : 'opacity-100')}>
+              <div className="max-w-4xl mx-auto space-y-8">
+                {uiElements.length === 0 && !isPending && (
+                  <div className="text-center py-16 animate-in fade-in-50">
+                    <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
+                    <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
+                  </div>
+                )}
+                <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
+                {isPending && (
+                   <div className="flex justify-center items-center py-8">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                   </div>
+                )}
+                <div ref={bottomOfPanelRef} />
+              </div>
+            </div>
+            <div className={cn("absolute inset-0 transition-transform duration-500 ease-in-out", showSocialOverlay ? 'translate-y-0' : 'translate-y-full')}>
+                <SocialFeed />
+            </div>
+          </>
+        );
+      case 'Social':
+        return <SocialFeed />;
+      case 'Dashboard':
+        return <div className="text-center py-16"><h2 className="text-2xl font-bold">Dashboard</h2><p className="text-muted-foreground">Coming soon!</p></div>;
+      case 'Profile':
+        return <div className="text-center py-16"><h2 className="text-2xl font-bold">Profile</h2><p className="text-muted-foreground">Coming soon!</p></div>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen bg-background">
       <Header />
-      <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto space-y-8">
-          {uiElements.length === 0 && !isPending && (
-            <div className="text-center py-16 animate-in fade-in-50">
-              <h1 className="text-3xl font-bold text-foreground">Welcome to FellaCare</h1>
-              <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
-            </div>
-          )}
-          <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
-          {isPending && (
-             <div className="flex justify-center items-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-             </div>
-          )}
-          <div ref={bottomOfPanelRef} />
-        </div>
+      <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative">
+        {renderContent()}
       </main>
-      <div className="sticky bottom-0 bg-background/80 backdrop-blur-sm border-t border-border">
-          <div className="max-w-4xl mx-auto p-4">
-              {uiElements.length === 0 && !isPending && (
-                  <SuggestedPrompts
-                      prompts={initialSuggestions}
-                      onPromptClick={handleSubmit}
-                  />
-              )}
-              <ChatInput onSubmit={handleSubmit} isPending={isPending} />
-          </div>
-      </div>
+      
+      {activeTab === 'Home' && !showSocialOverlay && (
+        <div className="sticky bottom-[68px] bg-background/80 backdrop-blur-sm border-t border-border">
+            <div className="max-w-4xl mx-auto p-4">
+                {uiElements.length === 0 && !isPending && (
+                    <SuggestedPrompts
+                        prompts={initialSuggestions}
+                        onPromptClick={handleSubmit}
+                    />
+                )}
+                <ChatInput onSubmit={handleSubmit} isPending={isPending} />
+            </div>
+        </div>
+      )}
+
+      <BottomNavigator activeTab={activeTab} onTabChange={handleTabChange} />
     </div>
   );
 }

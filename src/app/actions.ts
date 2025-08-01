@@ -10,5 +10,5 @@ export async function handleUserPrompt(input: RenderDynamicUIInput): Promise<Ren
 
 export async function fetchSuggestedActions(input: SuggestedActionsInput): Promise<SuggestedActionsOutput> {
   const result = await getSuggestedActions(input);
-  return result;
+  return { actions: result.actions || [] };
 }
