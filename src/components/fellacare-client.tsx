@@ -35,12 +35,6 @@ export function FellaCareClient() {
     }
     getSuggestions();
   }, [initialSuggestions]);
-
-  useEffect(() => {
-    if (uiElements.length > 0) {
-      bottomOfPanelRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [uiElements]);
   
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -54,6 +48,9 @@ export function FellaCareClient() {
         const result = await handleUserPrompt({ prompt });
         if (result.uiElements) {
           setUiElements(prev => [...prev, ...result.uiElements]);
+          requestAnimationFrame(() => {
+            bottomOfPanelRef.current?.scrollIntoView({ behavior: 'smooth' });
+          });
         }
       } catch (error)
 {
