@@ -21,6 +21,7 @@ export function FellaCareClient() {
   
   const [activeTab, setActiveTab] = useState('Home');
   const mainContentRef = useRef<HTMLElement>(null);
+  const bottomOfChatRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     async function getSuggestions() {
@@ -36,6 +37,12 @@ export function FellaCareClient() {
     getSuggestions();
   }, [initialSuggestions]);
   
+  useEffect(() => {
+    if (bottomOfChatRef.current) {
+        bottomOfChatRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [uiElements]);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -47,13 +54,9 @@ export function FellaCareClient() {
       try {
         const result = await handleUserPrompt({ prompt });
         if (result.uiElements) {
-          setUiElements(prev => [...result.uiElements, ...prev]);
-           if (mainContentRef.current) {
-            mainContentRef.current.scrollTop = 0;
-          }
+          setUiElements(prev => [...prev, ...result.uiElements]);
         }
-      } catch (error)
-{
+      } catch (error) {
         console.error("Error processing prompt:", error);
         toast({
           variant: "destructive",
@@ -68,32 +71,21 @@ export function FellaCareClient() {
     switch (activeTab) {
       case 'Home':
         return (
-          <>
-            <div className="max-w-4xl mx-auto space-y-8 px-4 md:px-6 lg:px-8 pt-8">
-              {isPending && (
+          <div className="max-w-4xl mx-auto space-y-8 px-4 md:px-6 lg:px-8 pt-8 pb-32">
+              {isPending && uiElements.length === 0 && (
                  <div className="flex justify-center items-center py-8">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                  </div>
               )}
               <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
               {uiElements.length === 0 && !isPending && (
-                <div className="text-center py-16 animate-in fade-in-50 h-[60vh] flex flex-col justify-center items-center">
+                <div className="text-center py-16 animate-in fade-in-50 h-[calc(100vh-350px)] flex flex-col justify-center items-center">
                   <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
                   <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
                 </div>
               )}
-            </div>
-            
-            <div className="py-8">
-              <div className="max-w-4xl mx-auto px-8">
-                <hr className="border-border" />
-              </div>
-            </div>
-
-            <div className="pb-16">
-              <SocialFeed />
-            </div>
-          </>
+              <div ref={bottomOfChatRef} />
+          </div>
         );
       case 'Social':
         return <div className="p-4 md:p-6 lg:p-8"><SocialFeed /></div>;
