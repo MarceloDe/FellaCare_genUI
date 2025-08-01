@@ -12,7 +12,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from 'lucide-react';
 import { BottomNavigator } from './bottom-navigator';
 import { SocialFeed } from './social-feed';
-import { cn } from '@/lib/utils';
 
 export function FellaCareClient() {
   const [uiElements, setUiElements] = useState<RenderDynamicUIOutput['uiElements']>([]);
@@ -22,9 +21,7 @@ export function FellaCareClient() {
   const [initialSuggestions, setInitialSuggestions] = useState<string[]>([]);
   
   const [activeTab, setActiveTab] = useState('Home');
-  const mainContentRef = useRef<HTMLDivElement>(null);
-  const [showSocialOverlay, setShowSocialOverlay] = useState(false);
-
+  
   useEffect(() => {
     async function getSuggestions() {
       if (initialSuggestions.length === 0) {
@@ -38,42 +35,14 @@ export function FellaCareClient() {
     }
     getSuggestions();
   }, [initialSuggestions]);
-
-  const handleScroll = () => {
-    if (activeTab !== 'Home' || !mainContentRef.current) return;
-    const { scrollTop } = mainContentRef.current;
-    // Show overlay if user scrolls past a certain point
-    if (scrollTop > 100) {
-      setShowSocialOverlay(true);
-    } else {
-      setShowSocialOverlay(false);
-    }
-  };
-
-  useEffect(() => {
-    const mainEl = mainContentRef.current;
-    if (mainEl && activeTab === 'Home') {
-      mainEl.addEventListener('scroll', handleScroll);
-    }
-    return () => {
-      if (mainEl) {
-        mainEl.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, [activeTab]);
   
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    setShowSocialOverlay(false); // Reset overlay when changing tabs
   };
 
   const handleSubmit = (prompt: string) => {
     if(!prompt) return;
 
-    if (showSocialOverlay) {
-      setShowSocialOverlay(false);
-    }
-    
     startTransition(async () => {
       try {
         const result = await handleUserPrompt({ prompt });
@@ -100,31 +69,36 @@ export function FellaCareClient() {
     switch (activeTab) {
       case 'Home':
         return (
+          // In Home tab, we render both the chat and the feed in one scrollable view
           <>
-            <div className={cn("transition-opacity duration-500", showSocialOverlay ? 'opacity-0' : 'opacity-100')}>
-              <div className="max-w-4xl mx-auto space-y-8">
-                {uiElements.length === 0 && !isPending && (
-                  <div className="text-center py-16 animate-in fade-in-50">
-                    <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
-                    <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
-                  </div>
-                )}
-                <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
-                {isPending && (
-                   <div className="flex justify-center items-center py-8">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                   </div>
-                )}
-                <div ref={bottomOfPanelRef} />
+            <div className="max-w-4xl mx-auto space-y-8 px-4 md:px-6 lg:px-8 pt-8">
+              {uiElements.length === 0 && !isPending && (
+                <div className="text-center py-16 animate-in fade-in-50">
+                  <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
+                  <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
+                </div>
+              )}
+              <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
+              {isPending && (
+                 <div className="flex justify-center items-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                 </div>
+              )}
+              <div ref={bottomOfPanelRef} />
+            </div>
+            {/* Divider between chat and social feed */}
+            <div className="py-8">
+              <div className="max-w-4xl mx-auto px-8">
+                 <hr className="border-border" />
               </div>
             </div>
-            <div className={cn("absolute inset-0 transition-transform duration-500 ease-in-out", showSocialOverlay ? 'translate-y-0' : 'translate-y-full')}>
-                <SocialFeed />
+            <div className="pb-16">
+              <SocialFeed />
             </div>
           </>
         );
       case 'Social':
-        return <SocialFeed />;
+        return <div className="p-4 md:p-6 lg:p-8"><SocialFeed /></div>;
       case 'Dashboard':
         return <div className="text-center py-16"><h2 className="text-2xl font-bold">Dashboard</h2><p className="text-muted-foreground">Coming soon!</p></div>;
       case 'Profile':
@@ -137,11 +111,11 @@ export function FellaCareClient() {
   return (
     <div className="flex flex-col h-screen bg-background">
       <Header />
-      <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative">
+      <main className="flex-1 overflow-y-auto">
         {renderContent()}
       </main>
       
-      {activeTab === 'Home' && !showSocialOverlay && (
+      {activeTab === 'Home' && (
         <div className="sticky bottom-[68px] bg-background/80 backdrop-blur-sm border-t border-border">
             <div className="max-w-4xl mx-auto p-4">
                 {uiElements.length === 0 && !isPending && (
