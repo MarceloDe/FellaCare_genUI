@@ -17,10 +17,10 @@ export function FellaCareClient() {
   const [uiElements, setUiElements] = useState<RenderDynamicUIOutput['uiElements']>([]);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
-  const bottomOfPanelRef = useRef<HTMLDivElement>(null);
   const [initialSuggestions, setInitialSuggestions] = useState<string[]>([]);
   
   const [activeTab, setActiveTab] = useState('Home');
+  const mainContentRef = useRef<HTMLElement>(null);
   
   useEffect(() => {
     async function getSuggestions() {
@@ -47,10 +47,10 @@ export function FellaCareClient() {
       try {
         const result = await handleUserPrompt({ prompt });
         if (result.uiElements) {
-          setUiElements(prev => [...prev, ...result.uiElements]);
-          requestAnimationFrame(() => {
-            bottomOfPanelRef.current?.scrollIntoView({ behavior: 'smooth' });
-          });
+          setUiElements(prev => [...result.uiElements, ...prev]);
+           if (mainContentRef.current) {
+            mainContentRef.current.scrollTop = 0;
+          }
         }
       } catch (error)
 {
@@ -70,24 +70,20 @@ export function FellaCareClient() {
         return (
           <>
             <div className="max-w-4xl mx-auto space-y-8 px-4 md:px-6 lg:px-8 pt-8">
-              {uiElements.length === 0 && !isPending && (
-                <div className="text-center py-16 animate-in fade-in-50">
-                  <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
-                  <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
-                </div>
-              )}
-              <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
               {isPending && (
                  <div className="flex justify-center items-center py-8">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                  </div>
               )}
-              <div ref={bottomOfPanelRef} />
+              <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
+              {uiElements.length === 0 && !isPending && (
+                <div className="text-center py-16 animate-in fade-in-50 h-[60vh] flex flex-col justify-center items-center">
+                  <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
+                  <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
+                </div>
+              )}
             </div>
             
-            {/* Spacer to push the social feed down */}
-            <div className="h-[60vh]" />
-
             <div className="py-8">
               <div className="max-w-4xl mx-auto px-8">
                 <hr className="border-border" />
@@ -113,7 +109,7 @@ export function FellaCareClient() {
   return (
     <div className="flex flex-col h-screen bg-background">
       <Header />
-      <main className="flex-1 overflow-y-auto">
+      <main ref={mainContentRef} className="flex-1 overflow-y-auto">
         {renderContent()}
       </main>
       
