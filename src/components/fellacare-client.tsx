@@ -41,7 +41,7 @@ export function FellaCareClient() {
 
   const handleScroll = () => {
     if (activeTab !== 'Home' || !mainContentRef.current) return;
-    const { scrollTop, scrollHeight, clientHeight } = mainContentRef.current;
+    const { scrollTop } = mainContentRef.current;
     // Show overlay if user scrolls past a certain point
     if (scrollTop > 100) {
       setShowSocialOverlay(true);
@@ -69,14 +69,6 @@ export function FellaCareClient() {
 
   const handleSubmit = (prompt: string) => {
     if(!prompt) return;
-
-    // When user submits, they want to see the chat. Hide the overlay.
-    if (showSocialOverlay) {
-        setShowSocialOverlay(false);
-        if (mainContentRef.current) {
-            mainContentRef.current.scrollTop = 0;
-        }
-    }
     
     startTransition(async () => {
       try {
@@ -84,7 +76,8 @@ export function FellaCareClient() {
         if (result.uiElements) {
           setUiElements(prev => [...prev, ...result.uiElements]);
         }
-      } catch (error) {
+      } catch (error)
+{
         console.error("Error processing prompt:", error);
         toast({
           variant: "destructive",
@@ -96,10 +89,15 @@ export function FellaCareClient() {
   };
 
   useEffect(() => {
-    if (bottomOfPanelRef.current) {
-      bottomOfPanelRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (uiElements.length > 0) {
+      // If the social overlay is visible, hide it first.
+      if (showSocialOverlay) {
+        setShowSocialOverlay(false);
+      }
+      // Scroll to the bottom of the panel to show the new content.
+      bottomOfPanelRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [uiElements]);
+  }, [uiElements, showSocialOverlay]);
 
   const renderContent = () => {
     switch (activeTab) {
