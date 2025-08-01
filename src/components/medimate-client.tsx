@@ -10,7 +10,7 @@ import { GenerativeUIRenderer } from '@/components/generative-ui-renderer';
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from 'lucide-react';
 
-export function MediMateClient({ initialSuggestions }: { initialSuggestions: string[] }) {
+export function FellaCareClient({ initialSuggestions }: { initialSuggestions: string[] }) {
   const [uiElements, setUiElements] = useState<RenderDynamicUIOutput['uiElements']>([]);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -48,7 +48,7 @@ export function MediMateClient({ initialSuggestions }: { initialSuggestions: str
         <div className="max-w-4xl mx-auto space-y-8">
           {uiElements.length === 0 && !isPending && (
             <div className="text-center py-16 animate-in fade-in-50">
-              <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
+              <h1 className="text-3xl font-bold text-foreground">Welcome to FellaCare</h1>
               <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
             </div>
           )}

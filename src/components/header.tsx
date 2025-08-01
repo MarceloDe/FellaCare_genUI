@@ -15,7 +15,7 @@ export function Header() {
           </SheetTrigger>
           <SheetContent side="left">
             <nav className="grid gap-6 text-lg font-medium mt-8">
-              <a href="#" className="flex items-center gap-2 text-lg font-semibold text-primary">MediMate</a>
+              <a href="#" className="flex items-center gap-2 text-lg font-semibold text-primary">FellaCare</a>
               <a href="#" className="hover:text-primary transition-colors">Coverage</a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Claims</a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Medications</a>
@@ -24,7 +24,7 @@ export function Header() {
           </SheetContent>
         </Sheet>
         <a href="#" className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-primary">MediMate</h1>
+            <h1 className="text-xl font-bold text-primary">FellaCare</h1>
         </a>
       </div>
       <nav className="hidden md:flex items-center gap-6 text-sm font-medium">

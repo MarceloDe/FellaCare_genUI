@@ -1,7 +1,7 @@
-import { MediMateClient } from '@/components/medimate-client';
+import { FellaCareClient } from '@/components/fellacare-client';
 import { fetchSuggestedActions } from '@/app/actions';
 
 export default async function Home() {
-  const initialSuggestions = (await fetchSuggestedActions({ previousInteractions: [] })).actions;
-  return <MediMateClient initialSuggestions={initialSuggestions} />;
+  const { actions } = await fetchSuggestedActions({ previousInteractions: [] });
+  return <FellaCareClient initialSuggestions={actions} />;
 }

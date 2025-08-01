@@ -29,7 +29,7 @@ export function ChatInput({ onSubmit, isPending }: ChatInputProps) {
         <Input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Ask MediMate anything..."
+          placeholder="Ask FellaCare anything..."
           className="pr-24"
           disabled={isPending}
           autoFocus
