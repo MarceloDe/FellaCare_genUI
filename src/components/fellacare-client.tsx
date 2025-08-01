@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect, useTransition } from 'react';
@@ -68,6 +69,15 @@ export function FellaCareClient() {
 
   const handleSubmit = (prompt: string) => {
     if(!prompt) return;
+
+    // When user submits, they want to see the chat. Hide the overlay.
+    if (showSocialOverlay) {
+        setShowSocialOverlay(false);
+        if (mainContentRef.current) {
+            mainContentRef.current.scrollTop = 0;
+        }
+    }
+    
     startTransition(async () => {
       try {
         const result = await handleUserPrompt({ prompt });
