@@ -1,13 +1,13 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 
 const firebaseConfig = {
-  "projectId": "medimate-mb7in",
-  "appId": "1:752324691585:web:dabbb9bbd7b23656bb6f80",
-  "storageBucket": "medimate-mb7in.firebasestorage.app",
-  "apiKey": "AIzaSyCNdQJzBbpdvoSoGv60bu4voYNKRpBxptY",
-  "authDomain": "medimate-mb7in.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "752324691585"
+  apiKey: "AIzaSyDUBmDbHaaJyA1B03ogy7NtlSvm2HDz5Tk",
+  authDomain: "gen-lang-client-0220846018.firebaseapp.com",
+  projectId: "gen-lang-client-0220846018",
+  storageBucket: "gen-lang-client-0220846018.firebasestorage.app",
+  messagingSenderId: "703319759376",
+  appId: "1:703319759376:web:55405ca66a219b15ffc895",
+  measurementId: "G-2D12GWTP1Z"
 };
 
 // Initialize Firebase
