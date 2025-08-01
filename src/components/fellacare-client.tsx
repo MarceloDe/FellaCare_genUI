@@ -69,12 +69,20 @@ export function FellaCareClient() {
 
   const handleSubmit = (prompt: string) => {
     if(!prompt) return;
+
+    if (showSocialOverlay) {
+      setShowSocialOverlay(false);
+    }
     
     startTransition(async () => {
       try {
         const result = await handleUserPrompt({ prompt });
         if (result.uiElements) {
           setUiElements(prev => [...prev, ...result.uiElements]);
+          // Defer scroll until after the next render
+          requestAnimationFrame(() => {
+            bottomOfPanelRef.current?.scrollIntoView({ behavior: 'smooth' });
+          });
         }
       } catch (error)
 {
@@ -87,17 +95,6 @@ export function FellaCareClient() {
       }
     });
   };
-
-  useEffect(() => {
-    if (uiElements.length > 0) {
-      // If the social overlay is visible, hide it first.
-      if (showSocialOverlay) {
-        setShowSocialOverlay(false);
-      }
-      // Scroll to the bottom of the panel to show the new content.
-      bottomOfPanelRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [uiElements, showSocialOverlay]);
 
   const renderContent = () => {
     switch (activeTab) {
