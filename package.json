@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm:genkit:watch\" \"npm:next:dev\"",
-    "next:dev": "next dev --turbopack -p 9002 --hostname 0.0.0.0",
-    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
+    "dev": "next dev --turbopack -p 9002 --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -53,8 +51,7 @@
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.24.2",
-    "concurrently": "^8.2.2"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^20",
