@@ -88,19 +88,18 @@ export function FellaCareClient() {
               )}
               <div ref={bottomOfPanelRef} />
             </div>
-            {/* Divider between chat and social feed - only show if there's a conversation */}
-            { uiElements.length > 0 && (
-              <>
-                <div className="py-8">
-                  <div className="max-w-4xl mx-auto px-8">
-                    <hr className="border-border" />
-                  </div>
-                </div>
-                <div className="pb-16">
-                  <SocialFeed />
-                </div>
-              </>
-            )}
+            
+            {/* Divider between chat and social feed */}
+            <div className="py-8">
+              <div className="max-w-4xl mx-auto px-8">
+                <hr className="border-border" />
+              </div>
+            </div>
+
+            {/* Social Feed always present in the scroll flow for Home tab */}
+            <div className="pb-16">
+              <SocialFeed />
+            </div>
           </>
         );
       case 'Social':
