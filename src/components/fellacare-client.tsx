@@ -71,7 +71,6 @@ export function FellaCareClient() {
     switch (activeTab) {
       case 'Home':
         return (
-          // In Home tab, we render both the chat and the feed in one scrollable view
           <>
             <div className="max-w-4xl mx-auto space-y-8 px-4 md:px-6 lg:px-8 pt-8">
               {uiElements.length === 0 && !isPending && (
@@ -89,14 +88,15 @@ export function FellaCareClient() {
               <div ref={bottomOfPanelRef} />
             </div>
             
-            {/* Divider between chat and social feed */}
+            {/* Spacer to push the social feed down */}
+            <div className="h-[60vh]" />
+
             <div className="py-8">
               <div className="max-w-4xl mx-auto px-8">
                 <hr className="border-border" />
               </div>
             </div>
 
-            {/* Social Feed always present in the scroll flow for Home tab */}
             <div className="pb-16">
               <SocialFeed />
             </div>
