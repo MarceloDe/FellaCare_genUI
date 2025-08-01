@@ -9,9 +9,10 @@ import { ChatInput } from '@/components/chat-input';
 import { SuggestedPrompts } from '@/components/suggested-prompts';
 import { GenerativeUIRenderer } from '@/components/generative-ui-renderer';
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from 'lucide-react';
+import { Loader2, Separator } from 'lucide-react';
 import { BottomNavigator } from './bottom-navigator';
 import { SocialFeed } from './social-feed';
+import { Card, CardContent } from './ui/card';
 
 export function FellaCareClient() {
   const [uiElements, setUiElements] = useState<RenderDynamicUIOutput['uiElements']>([]);
@@ -20,7 +21,6 @@ export function FellaCareClient() {
   const [initialSuggestions, setInitialSuggestions] = useState<string[]>([]);
   
   const [activeTab, setActiveTab] = useState('Home');
-  const mainContentRef = useRef<HTMLElement>(null);
   const bottomOfChatRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -80,7 +80,7 @@ export function FellaCareClient() {
               <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
               {uiElements.length === 0 && !isPending && (
                 <div className="text-center py-16 animate-in fade-in-50 h-[calc(100vh-350px)] flex flex-col justify-center items-center">
-                  <h1 className="text-3xl font-bold text-foreground">Welcome to MediMate</h1>
+                  <h1 className="text-3xl font-bold text-foreground">Welcome to FellaCare</h1>
                   <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
                 </div>
               )}
@@ -101,7 +101,7 @@ export function FellaCareClient() {
   return (
     <div className="flex flex-col h-screen bg-background">
       <Header />
-      <main ref={mainContentRef} className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto">
         {renderContent()}
       </main>
       
