@@ -15,7 +15,7 @@ export function GenerativeUIRenderer({ elements, onElementClick }: GenerativeUIR
   }
 
   // To display the latest messages on top, we'll render a reversed version of the array.
-  const reversedElements = [...elements].reverse();
+  const reversedElements = [...elements];
 
   return (
     <div className="space-y-4">

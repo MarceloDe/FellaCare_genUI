@@ -9,10 +9,9 @@ import { ChatInput } from '@/components/chat-input';
 import { SuggestedPrompts } from '@/components/suggested-prompts';
 import { GenerativeUIRenderer } from '@/components/generative-ui-renderer';
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Separator } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { BottomNavigator } from './bottom-navigator';
 import { SocialFeed } from './social-feed';
-import { Card, CardContent } from './ui/card';
 
 export function FellaCareClient() {
   const [uiElements, setUiElements] = useState<RenderDynamicUIOutput['uiElements']>([]);
@@ -21,7 +20,7 @@ export function FellaCareClient() {
   const [initialSuggestions, setInitialSuggestions] = useState<string[]>([]);
   
   const [activeTab, setActiveTab] = useState('Home');
-  const bottomOfChatRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     async function getSuggestions() {
@@ -38,8 +37,8 @@ export function FellaCareClient() {
   }, [initialSuggestions]);
   
   useEffect(() => {
-    if (bottomOfChatRef.current) {
-        bottomOfChatRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (mainContentRef.current) {
+        mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [uiElements]);
 
@@ -54,7 +53,7 @@ export function FellaCareClient() {
       try {
         const result = await handleUserPrompt({ prompt });
         if (result.uiElements) {
-          setUiElements(prev => [...prev, ...result.uiElements]);
+          setUiElements(prev => [...result.uiElements, ...prev]);
         }
       } catch (error) {
         console.error("Error processing prompt:", error);
@@ -84,7 +83,6 @@ export function FellaCareClient() {
                   <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
                 </div>
               )}
-              <div ref={bottomOfChatRef} />
           </div>
         );
       case 'Social':
@@ -101,7 +99,7 @@ export function FellaCareClient() {
   return (
     <div className="flex flex-col h-screen bg-background">
       <Header />
-      <main className="flex-1 overflow-y-auto">
+      <main ref={mainContentRef} className="flex-1 overflow-y-auto">
         {renderContent()}
       </main>
       
