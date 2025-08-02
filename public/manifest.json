@@ -1,0 +1,21 @@
+{
+  "name": "FellaCare",
+  "short_name": "FellaCare",
+  "description": "Your AI-powered health insurance assistant.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F0F5FA",
+  "theme_color": "#33A6FF",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
