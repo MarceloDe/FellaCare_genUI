@@ -38,13 +38,18 @@ export function FellaCareClient() {
   
   useEffect(() => {
     if (mainContentRef.current) {
-        mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [uiElements]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
+
+  const handleReset = () => {
+    setUiElements([]);
+    setActiveTab('Home');
+  }
 
   const handleSubmit = (prompt: string) => {
     if(!prompt) return;
@@ -66,25 +71,27 @@ export function FellaCareClient() {
     });
   };
 
+  const renderHome = () => (
+    <div className="max-w-4xl mx-auto space-y-8 px-4 md:px-6 lg:px-8 pt-8 pb-32">
+      {isPending && uiElements.length === 0 && (
+          <div className="flex justify-center items-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+      )}
+      <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
+      {uiElements.length === 0 && !isPending && (
+        <div className="text-center py-16 animate-in fade-in-50 h-[calc(100vh-350px)] flex flex-col justify-center items-center">
+          <h1 className="text-3xl font-bold text-foreground">Welcome to FellaCare</h1>
+          <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
+        </div>
+      )}
+    </div>
+  )
+
   const renderContent = () => {
     switch (activeTab) {
       case 'Home':
-        return (
-          <div className="max-w-4xl mx-auto space-y-8 px-4 md:px-6 lg:px-8 pt-8 pb-32">
-              {isPending && uiElements.length === 0 && (
-                 <div className="flex justify-center items-center py-8">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                 </div>
-              )}
-              <GenerativeUIRenderer elements={uiElements} onElementClick={handleSubmit} />
-              {uiElements.length === 0 && !isPending && (
-                <div className="text-center py-16 animate-in fade-in-50 h-[calc(100vh-350px)] flex flex-col justify-center items-center">
-                  <h1 className="text-3xl font-bold text-foreground">Welcome to FellaCare</h1>
-                  <p className="text-muted-foreground mt-2">How can I help you with your health insurance today?</p>
-                </div>
-              )}
-          </div>
-        );
+        return renderHome();
       case 'Social':
         return <div className="p-4 md:p-6 lg:p-8"><SocialFeed /></div>;
       case 'Dashboard':
@@ -98,7 +105,7 @@ export function FellaCareClient() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <Header />
+      <Header onLogoClick={handleReset} />
       <main ref={mainContentRef} className="flex-1 overflow-y-auto">
         {renderContent()}
       </main>
