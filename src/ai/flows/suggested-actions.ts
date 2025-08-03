@@ -8,7 +8,7 @@
  * - SuggestedActionsOutput - The return type for the getSuggestedactions function.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai} from '@/ai/init';
 import {z} from 'genkit';
 
 const SuggestedActionsInputSchema = z.object({

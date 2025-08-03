@@ -8,7 +8,7 @@
  * - RenderDynamicUIOutput - The return type for the renderDynamicUI function.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai} from '@/ai/init';
 import {z} from 'genkit';
 
 const RenderDynamicUIInputSchema = z.object({

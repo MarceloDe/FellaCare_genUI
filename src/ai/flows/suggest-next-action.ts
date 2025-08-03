@@ -8,7 +8,7 @@
  * - SuggestNextActionOutput - The return type for the suggestNextAction function.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai} from '@/ai/init';
 import {z} from 'genkit';
 
 const SuggestNextActionInputSchema = z.object({
