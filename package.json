@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm:next:dev\" \"npm:genkit:watch\"",
+    "dev": "concurrently \"npm:next:dev\" \"npm:genkit:dev\" \"npm:genkit:ui\"",
     "next:dev": "next dev --turbopack -p 9002",
-    "genkit:watch": "genkit start --tsx --watch src/ai/dev.ts",
+    "genkit:dev": "GENKIT_ENV=dev tsx --watch src/ai/dev.ts",
+    "genkit:ui": "genkit start --port 4000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
