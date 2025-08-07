@@ -1,4 +1,5 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
+import { getAnalytics, isSupported } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDUBmDbHaaJyA1B03ogy7NtlSvm2HDz5Tk",
@@ -6,11 +7,21 @@ const firebaseConfig = {
   projectId: "gen-lang-client-0220846018",
   storageBucket: "gen-lang-client-0220846018.firebasestorage.app",
   messagingSenderId: "703319759376",
-  appId: "1:703319759376:web:55405ca66a219b15ffc895",
-  measurementId: "G-2D12GWTP1Z"
+  appId: "1:703319759376:web:922ffeae70f78736ffc895",
+  measurementId: "G-MPRSMB32K4"
 };
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-export { app };
+// Initialize Analytics (only in browser environment)
+let analytics;
+if (typeof window !== 'undefined') {
+  isSupported().then(supported => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
+
+export { app, analytics };

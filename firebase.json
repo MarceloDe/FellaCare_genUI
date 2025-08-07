@@ -14,7 +14,7 @@
     "indexes": "firestore.indexes.json"
   },
   "apphosting": {
-    "backendId": "studio",
+    "backendId": "fellacare",
     "rootDir": "/",
     "ignore": [
       "node_modules",
