@@ -47,3 +47,8 @@ firestore-debug.log
 # Google Cloud SDK
 google-cloud-sdk/
 google-cloud-cli-*.tar.gz
+
+# Development logs and PIDs
+logs/
+.pids/
+dev.log

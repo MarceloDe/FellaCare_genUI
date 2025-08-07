@@ -12,7 +12,16 @@ env:
   # Grant access to secrets in Cloud Secret Manager.
   - variable: GEMINI_API_KEY
     secret: GEMINI_API_KEY
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: GOOGLE_CLOUD_PROJECT
     secret: GOOGLE_CLOUD_PROJECT
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: GCLOUD_PROJECT
     secret: GCLOUD_PROJECT
+    availability:
+      - BUILD
+      - RUNTIME
